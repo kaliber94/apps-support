@@ -91,6 +91,10 @@ body.page-document {
   justify-content: center;
 }
 
+.topbar .eyebrow {
+  margin-bottom: 0;
+}
+
 .back-link {
   color: var(--text-secondary);
   text-decoration: none;

@@ -1,55 +1,35 @@
 {
   "site": {
     "base_url": "https://kaliber94.github.io/apps-support",
-    "default_language": "it",
-    "home_languages": ["it", "en"],
+    "default_language": "en",
     "default_email": "app.support.graziani@icloud.com",
     "copyright_owner": "Alessandro Graziani",
     "copyright_year": 2026,
-    "title": {
-      "it": "Supporto & Privacy – Le mie App",
-      "en": "Support & Privacy – My Apps"
-    },
-    "heading": {
-      "it": "Supporto & Privacy",
-      "en": "Support & Privacy"
-    },
-    "subtitle": {
-      "it": "Seleziona un’app per consultare la pagina di supporto o la privacy policy.",
-      "en": "Select an app to view its support page or privacy policy."
-    }
+    "root_title": "App Support",
+    "root_heading": "App Support",
+    "root_message": "Please use the direct support or privacy policy link provided on the App Store or inside your app."
   },
   "apps": [
     {
       "slug": "globaldining",
       "name": "GlobalDining",
       "email": "app.support.graziani@icloud.com",
-      "default_language": "it",
-      "languages": ["it", "en", "es"],
+      "default_language": "en",
+      "languages": ["en", "it", "es"],
       "has_privacy": false,
-      "copyright_year": 2026,
-      "tagline": {
-        "it": "Pagina di supporto ufficiale per GlobalDining.",
-        "en": "Official support page for GlobalDining.",
-        "es": "Página oficial de soporte de GlobalDining."
-      }
+      "copyright_year": 2026
     },
     {
       "slug": "mr-advisor",
       "name": "MR Advisor",
       "email": "app.support.graziani@icloud.com",
-      "default_language": "it",
-      "languages": ["it", "en", "fr"],
+      "default_language": "en",
+      "languages": ["en", "it", "fr"],
       "has_privacy": true,
       "copyright_year": 2026,
-      "tagline": {
-        "it": "Supporto e informativa sulla privacy per MR Advisor.",
-        "en": "Support and privacy policy for MR Advisor.",
-        "fr": "Assistance et politique de confidentialité pour MR Advisor."
-      },
       "privacy_updated": {
-        "it": "Novembre 2026",
         "en": "November 2026",
+        "it": "Novembre 2026",
         "fr": "Novembre 2026"
       }
     }

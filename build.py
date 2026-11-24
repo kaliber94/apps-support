@@ -4,6 +4,13 @@
 Usa solo la libreria standard Python 3.
 Modifica `apps.json` e i file Markdown in `content/<slug>/privacy.<lang>.md`,
 poi esegui `python3 build.py` per rigenerare tutte le pagine HTML statiche.
+
+Convenzione URL:
+- Ogni pagina include sempre il codice lingua nell'URL:
+  /<slug>/support/<lang>/   e   /<slug>/privacy/<lang>/
+- Le directory senza lingua (/<slug>/support/ e /<slug>/privacy/) reindirizzano
+  automaticamente alla lingua di default (es. `en`).
+- La root `/` non espone l'elenco delle app: ogni app è raggiungibile solo tramite link diretto.
 """
 
 from __future__ import annotations
@@ -20,30 +27,8 @@ CONTENT_DIR = ROOT / "content"
 
 # Dizionario traduzioni UI condivise (aggiungi qui eventuali nuove lingue)
 LANG_STRINGS: dict[str, dict[str, str]] = {
-    "it": {
-        "name": "Italiano",
-        "all_apps": "Tutte le app",
-        "support_badge": "Supporto",
-        "support_title": "Supporto – {app}",
-        "support_heading": "Supporto {app}",
-        "support_meta": "Pagina di supporto ufficiale dell’app {app}. Hai bisogno di assistenza? Contattaci qui.",
-        "support_prompt": "Hai bisogno di assistenza o vuoi segnalare un problema?",
-        "contact_label": "Scrivici a:",
-        "privacy_badge": "Privacy Policy",
-        "privacy_title": "Privacy Policy – {app}",
-        "privacy_heading": "Privacy Policy – {app}",
-        "privacy_meta": "Informativa sulla privacy ufficiale dell’app {app}.",
-        "privacy_link": "Leggi la Privacy Policy",
-        "support_link": "Pagina di supporto",
-        "last_updated": "Ultimo aggiornamento: {date}",
-        "rights": "Tutti i diritti riservati",
-        "btn_support": "Supporto",
-        "btn_privacy": "Privacy Policy",
-        "missing_privacy": "L’informativa sulla privacy per {app} sarà disponibile a breve. Per qualsiasi domanda puoi contattarci all’indirizzo {email}.",
-    },
     "en": {
         "name": "English",
-        "all_apps": "All apps",
         "support_badge": "Support",
         "support_title": "Support – {app}",
         "support_heading": "{app} Support",
@@ -58,13 +43,28 @@ LANG_STRINGS: dict[str, dict[str, str]] = {
         "support_link": "Support page",
         "last_updated": "Last updated: {date}",
         "rights": "All rights reserved",
-        "btn_support": "Support",
-        "btn_privacy": "Privacy Policy",
         "missing_privacy": "The privacy policy for {app} will be published shortly. For any questions, please contact us at {email}.",
+    },
+    "it": {
+        "name": "Italiano",
+        "support_badge": "Supporto",
+        "support_title": "Supporto – {app}",
+        "support_heading": "Supporto {app}",
+        "support_meta": "Pagina di supporto ufficiale dell’app {app}. Hai bisogno di assistenza? Contattaci qui.",
+        "support_prompt": "Hai bisogno di assistenza o vuoi segnalare un problema?",
+        "contact_label": "Scrivici a:",
+        "privacy_badge": "Privacy Policy",
+        "privacy_title": "Privacy Policy – {app}",
+        "privacy_heading": "Privacy Policy – {app}",
+        "privacy_meta": "Informativa sulla privacy ufficiale dell’app {app}.",
+        "privacy_link": "Leggi la Privacy Policy",
+        "support_link": "Pagina di supporto",
+        "last_updated": "Ultimo aggiornamento: {date}",
+        "rights": "Tutti i diritti riservati",
+        "missing_privacy": "L’informativa sulla privacy per {app} sarà disponibile a breve. Per qualsiasi domanda puoi contattarci all’indirizzo {email}.",
     },
     "es": {
         "name": "Español",
-        "all_apps": "Todas las apps",
         "support_badge": "Soporte",
         "support_title": "Soporte – {app}",
         "support_heading": "Soporte de {app}",
@@ -79,13 +79,10 @@ LANG_STRINGS: dict[str, dict[str, str]] = {
         "support_link": "Página de soporte",
         "last_updated": "Última actualización: {date}",
         "rights": "Todos los derechos reservados",
-        "btn_support": "Soporte",
-        "btn_privacy": "Privacidad",
         "missing_privacy": "La política de privacidad de {app} estará disponible pronto. Si tienes preguntas, escríbenos a {email}.",
     },
     "fr": {
         "name": "Français",
-        "all_apps": "Toutes les apps",
         "support_badge": "Assistance",
         "support_title": "Assistance – {app}",
         "support_heading": "Assistance {app}",
@@ -100,13 +97,10 @@ LANG_STRINGS: dict[str, dict[str, str]] = {
         "support_link": "Page d’assistance",
         "last_updated": "Dernière mise à jour : {date}",
         "rights": "Tous droits réservés",
-        "btn_support": "Assistance",
-        "btn_privacy": "Confidentialité",
         "missing_privacy": "La politique de confidentialité de {app} sera bientôt publiée. Pour toute question, contactez-nous à {email}.",
     },
     "de": {
         "name": "Deutsch",
-        "all_apps": "Alle Apps",
         "support_badge": "Support",
         "support_title": "Support – {app}",
         "support_heading": "{app} Support",
@@ -121,8 +115,6 @@ LANG_STRINGS: dict[str, dict[str, str]] = {
         "support_link": "Support-Seite",
         "last_updated": "Zuletzt aktualisiert: {date}",
         "rights": "Alle Rechte vorbehalten",
-        "btn_support": "Support",
-        "btn_privacy": "Datenschutz",
         "missing_privacy": "Die Datenschutzerklärung für {app} wird in Kürze veröffentlicht. Bei Fragen erreichen Sie uns unter {email}.",
     },
 }
@@ -156,14 +148,9 @@ def rel_file_url(from_dir: str, to_file: str) -> str:
     return os.path.relpath(to_file, src).replace(os.sep, "/")
 
 
-def section_dir(slug: str, section: str, lang: str, default_lang: str) -> str:
-    base = f"{slug}/{section}"
-    return base if lang == default_lang else f"{base}/{lang}"
-
-
-def home_dir(lang: str, default_lang: str, home_langs: list[str]) -> str:
-    chosen = lang if lang in home_langs else ("en" if "en" in home_langs else default_lang)
-    return "" if chosen == default_lang else chosen
+def section_dir(slug: str, section: str, lang: str) -> str:
+    """Restituisce sempre il percorso con la lingua esplicita nell'URL."""
+    return f"{slug}/{section}/{lang}"
 
 
 def format_inline(text: str) -> str:
@@ -177,8 +164,6 @@ def format_inline(text: str) -> str:
             continue
 
         escaped = html.escape(part, quote=True)
-
-        # Estrae temporaneamente i link Markdown per non corrompere gli URL con altre regex
         placeholders: list[str] = []
 
         def _replace_link(match: re.Match[str]) -> str:
@@ -319,21 +304,46 @@ def render_page(
     body_class: str,
     card_class: str,
     body_html: str,
+    extra_head: str = "",
 ) -> str:
     body_attr = f' class="{body_class}"' if body_class else ""
+    extra_lines = f"\n{extra_head}" if extra_head else ""
+    hreflang_lines = f"\n{hreflangs_html}" if hreflangs_html else ""
     return f"""<!DOCTYPE html>
 <html lang="{html.escape(lang)}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{html.escape(title)}</title>
-  <meta name="description" content="{html.escape(description)}">
-{hreflangs_html}
+  <meta name="description" content="{html.escape(description)}">{extra_lines}{hreflang_lines}
   <link rel="stylesheet" href="{css_href}">
 </head>
 <body{body_attr}>
   <main class="{card_class}">
 {body_html}
+  </main>
+</body>
+</html>
+"""
+
+
+def render_redirect_page(*, lang: str, title: str, target_href: str, css_href: str) -> str:
+    escaped_target = html.escape(target_href, quote=True)
+    return f"""<!DOCTYPE html>
+<html lang="{html.escape(lang)}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{html.escape(title)}</title>
+  <meta http-equiv="refresh" content="0; url={escaped_target}">
+  <link rel="canonical" href="{escaped_target}">
+  <link rel="stylesheet" href="{css_href}">
+  <script>window.location.replace({json.dumps(target_href)});</script>
+</head>
+<body>
+  <main class="card card-support">
+    <p class="lead">Redirecting…</p>
+    <p><a href="{escaped_target}">Continue</a></p>
   </main>
 </body>
 </html>
@@ -353,95 +363,76 @@ def build() -> None:
     site = config["site"]
     apps = config["apps"]
 
-    site_default_lang: str = site.get("default_language", "it")
-    home_langs: list[str] = site.get("home_languages", ["it", "en"])
+    site_default_lang: str = site.get("default_language", "en")
     base_url: str = site.get("base_url", "").rstrip("/")
     generated: list[str] = []
 
-    # 1. Home hub pages
-    home_lang_dirs = {lang: home_dir(lang, site_default_lang, home_langs) for lang in home_langs}
-    for lang in home_langs:
-        cur_dir = home_lang_dirs[lang]
-        css_href = rel_file_url(cur_dir, "assets/style.css")
-        hreflangs = render_hreflangs(cur_dir, home_lang_dirs, site_default_lang)
-        lang_nav = render_lang_nav(lang, cur_dir, home_lang_dirs)
+    # 1. Root page neutra (nessun elenco app pubblico: accesso solo tramite link diretto)
+    root_title = site.get("root_title", "App Support")
+    root_heading = site.get("root_heading", "App Support")
+    root_message = site.get(
+        "root_message",
+        "Please use the direct support or privacy policy link provided on the App Store or inside your app.",
+    )
+    year = site.get("copyright_year", 2026)
+    owner = site.get("copyright_owner", "")
+    root_footer = f"© {year} {owner} – {t(site_default_lang, 'rights')}" if owner else f"© {year}"
 
-        app_cards: list[str] = []
-        for app in apps:
-            slug = app["slug"]
-            app_name = app["name"]
-            app_langs = app["languages"]
-            app_def = app.get("default_language", site_default_lang)
-            target_lang = lang if lang in app_langs else app_def
-
-            has_privacy = app.get("has_privacy", True)
-            sup_href = rel_dir_url(cur_dir, section_dir(slug, "support", target_lang, app_def))
-            tagline = app.get("tagline", {}).get(target_lang) or app.get("tagline", {}).get(app_def, "")
-            pills = "".join(f'<span class="lang-pill">{html.escape(l)}</span>' for l in app_langs)
-
-            actions = [f'          <a class="btn btn-primary" href="{sup_href}">{html.escape(t(lang, "btn_support"))}</a>']
-            if has_privacy:
-                priv_href = rel_dir_url(cur_dir, section_dir(slug, "privacy", target_lang, app_def))
-                actions.append(f'          <a class="btn btn-secondary" href="{priv_href}">{html.escape(t(lang, "btn_privacy"))}</a>')
-
-            app_cards.append(
-                f"""      <article class="app-item">
-        <div>
-          <h2>{html.escape(app_name)}</h2>
-          <p>{html.escape(tagline)}</p>
-          <div class="app-langs">{pills}</div>
-        </div>
-        <div class="app-actions">
-{chr(10).join(actions)}
-        </div>
-      </article>"""
-            )
-
-        title = site["title"].get(lang, site["title"][site_default_lang])
-        heading = site["heading"].get(lang, site["heading"][site_default_lang])
-        subtitle = site["subtitle"].get(lang, site["subtitle"][site_default_lang])
-        year = site.get("copyright_year", 2026)
-        owner = site.get("copyright_owner", "")
-        footer_text = f"© {year} {owner} – {t(lang, 'rights')}" if owner else f"© {year} – {t(lang, 'rights')}"
-
-        body_html = f"""    <div class="topbar">
-      <span class="eyebrow">Apps</span>
-      {lang_nav}
-    </div>
-    <h1>{html.escape(heading)}</h1>
-    <p class="lead">{html.escape(subtitle)}</p>
-    <section class="app-list">
-{chr(10).join(app_cards)}
-    </section>
+    root_body = f"""    <h1>{html.escape(root_heading)}</h1>
+    <p class="lead">{html.escape(root_message)}</p>
     <footer>
-      <span>{html.escape(footer_text)}</span>
+      <span>{html.escape(root_footer)}</span>
     </footer>"""
 
-        page_html = render_page(
-            lang=lang,
-            title=title,
-            description=subtitle,
-            css_href=css_href,
-            hreflangs_html=hreflangs,
-            body_class="page-document",
-            card_class="card card-wide",
-            body_html=body_html,
-        )
-        out = write_html(cur_dir, page_html)
-        generated.append(str(out.relative_to(ROOT)))
+    root_html = render_page(
+        lang=site_default_lang,
+        title=root_title,
+        description=root_message,
+        css_href="assets/style.css",
+        hreflangs_html="",
+        body_class="",
+        card_class="card card-support",
+        body_html=root_body,
+        extra_head='  <meta name="robots" content="noindex, nofollow">',
+    )
+    out = write_html("", root_html)
+    generated.append(str(out.relative_to(ROOT)))
 
-    # 2. Per-app Support & Privacy Policy pages
+    # 2. Per-app Support & Privacy Policy pages (sempre con /<lang>/ nell'URL)
     for app in apps:
         slug = app["slug"]
         app_name = app["name"]
         email = app.get("email", site["default_email"])
         app_langs: list[str] = app["languages"]
         app_def: str = app.get("default_language", site_default_lang)
-        year = app.get("copyright_year", site.get("copyright_year", 2026))
+        app_year = app.get("copyright_year", year)
         has_privacy: bool = app.get("has_privacy", True)
 
-        support_dirs = {l: section_dir(slug, "support", l, app_def) for l in app_langs}
-        privacy_dirs = {l: section_dir(slug, "privacy", l, app_def) for l in app_langs} if has_privacy else {}
+        support_dirs = {l: section_dir(slug, "support", l) for l in app_langs}
+        privacy_dirs = {l: section_dir(slug, "privacy", l) for l in app_langs} if has_privacy else {}
+
+        # Redirect /<slug>/support/ -> /<slug>/support/<default_lang>/
+        sup_base_dir = f"{slug}/support"
+        sup_redirect = render_redirect_page(
+            lang=app_def,
+            title=t(app_def, "support_title", app=app_name),
+            target_href=f"{app_def}/",
+            css_href=rel_file_url(sup_base_dir, "assets/style.css"),
+        )
+        out = write_html(sup_base_dir, sup_redirect)
+        generated.append(str(out.relative_to(ROOT)))
+
+        if has_privacy:
+            # Redirect /<slug>/privacy/ -> /<slug>/privacy/<default_lang>/
+            priv_base_dir = f"{slug}/privacy"
+            priv_redirect = render_redirect_page(
+                lang=app_def,
+                title=t(app_def, "privacy_title", app=app_name),
+                target_href=f"{app_def}/",
+                css_href=rel_file_url(priv_base_dir, "assets/style.css"),
+            )
+            out = write_html(priv_base_dir, priv_redirect)
+            generated.append(str(out.relative_to(ROOT)))
 
         for lang in app_langs:
             # --- Support page ---
@@ -449,7 +440,6 @@ def build() -> None:
             css_href = rel_file_url(cur_dir, "assets/style.css")
             hreflangs = render_hreflangs(cur_dir, support_dirs, app_def)
             lang_nav = render_lang_nav(lang, cur_dir, support_dirs)
-            back_href = rel_dir_url(cur_dir, home_dir(lang, site_default_lang, home_langs))
 
             privacy_link_block = ""
             if has_privacy:
@@ -459,8 +449,7 @@ def build() -> None:
       <a href="{privacy_href}">{html.escape(t(lang, 'privacy_link'))}</a>
     </div>"""
 
-            support_body = f"""    <div class="topbar">
-      <a class="back-link" href="{back_href}">← {html.escape(t(lang, 'all_apps'))}</a>
+            support_body = f"""    <div class="topbar topbar-center">
       {lang_nav}
     </div>
     <span class="eyebrow">{html.escape(t(lang, 'support_badge'))}</span>
@@ -471,7 +460,7 @@ def build() -> None:
       <a class="email-button" href="mailto:{html.escape(email)}">{html.escape(email)}</a>
     </div>{privacy_link_block}
     <footer>
-      <span>© {year} {html.escape(app_name)} – {html.escape(t(lang, 'rights'))}</span>
+      <span>© {app_year} {html.escape(app_name)} – {html.escape(t(lang, 'rights'))}</span>
     </footer>"""
 
             support_html = render_page(
@@ -495,7 +484,6 @@ def build() -> None:
             css_href = rel_file_url(cur_dir, "assets/style.css")
             hreflangs = render_hreflangs(cur_dir, privacy_dirs, app_def)
             lang_nav = render_lang_nav(lang, cur_dir, privacy_dirs)
-            back_href = rel_dir_url(cur_dir, home_dir(lang, site_default_lang, home_langs))
             support_href = rel_dir_url(cur_dir, support_dirs[lang])
 
             md_path = CONTENT_DIR / slug / f"privacy.{lang}.md"
@@ -514,16 +502,15 @@ def build() -> None:
             )
 
             privacy_body = f"""    <div class="topbar">
-      <a class="back-link" href="{back_href}">← {html.escape(t(lang, 'all_apps'))}</a>
+      <span class="eyebrow">{html.escape(t(lang, 'privacy_badge'))}</span>
       {lang_nav}
     </div>
-    <span class="eyebrow">{html.escape(t(lang, 'privacy_badge'))}</span>
     <h1>{html.escape(heading)}</h1>{updated_html}
     <article class="prose">
 {prose_html}
     </article>
     <footer>
-      <span>© {year} {html.escape(app_name)} – {html.escape(t(lang, 'rights'))}</span>
+      <span>© {app_year} {html.escape(app_name)} – {html.escape(t(lang, 'rights'))}</span>
       <a href="{support_href}">{html.escape(t(lang, 'support_link'))}</a>
     </footer>"""
 
@@ -545,14 +532,13 @@ def build() -> None:
         print("\nURL GitHub Pages:")
         for app in apps:
             slug = app["slug"]
-            app_def = app.get("default_language", site_default_lang)
             has_privacy = app.get("has_privacy", True)
-            print(f"\n  {app['name']}:")
+            print(f"\n  {app['name']} (default: {app.get('default_language', site_default_lang)}):")
             for lang in app["languages"]:
-                sup = section_dir(slug, "support", lang, app_def)
+                sup = section_dir(slug, "support", lang)
                 print(f"    [{lang}] Support : {base_url}/{sup}/")
                 if has_privacy:
-                    priv = section_dir(slug, "privacy", lang, app_def)
+                    priv = section_dir(slug, "privacy", lang)
                     print(f"    [{lang}] Privacy : {base_url}/{priv}/")
 
 
