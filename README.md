@@ -8,9 +8,10 @@ Repository centrale per le pagine di **Supporto** e **Privacy Policy** pubblicat
 
 - La root `/` non mostra l'elenco delle app: ogni app è raggiungibile solo tramite link diretto.
 - La lingua di default è **`en`** e il codice lingua è sempre esplicito nell'URL:
+  - `/<slug>/<lang>/` (pagina hub della singola app con box Supporto e, se attiva, Privacy Policy)
   - `/<slug>/support/<lang>/` (es. `/mr-advisor/support/en/`, `/mr-advisor/support/it/`, `/mr-advisor/support/fr/`)
   - `/<slug>/privacy/<lang>/` (es. `/mr-advisor/privacy/en/`, `/mr-advisor/privacy/it/`, `/mr-advisor/privacy/fr/`)
-- Gli URL senza lingua (`/<slug>/support/` e `/<slug>/privacy/`) reindirizzano automaticamente a `en/`.
+- Gli URL senza lingua (`/<slug>/`, `/<slug>/support/` e `/<slug>/privacy/`) reindirizzano automaticamente a `en/`.
 
 ## Come funziona
 

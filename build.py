@@ -6,9 +6,11 @@ Modifica `apps.json` e i file Markdown in `content/<slug>/privacy.<lang>.md`,
 poi esegui `python3 build.py` per rigenerare tutte le pagine HTML statiche.
 
 Convenzione URL:
+- Ogni app ha la propria home in /<slug>/<lang>/ (con redirect da /<slug>/ a /<slug>/<default_lang>/),
+  con box dedicati a Supporto e (se attiva) Privacy Policy.
 - Ogni pagina include sempre il codice lingua nell'URL:
-  /<slug>/support/<lang>/   e   /<slug>/privacy/<lang>/
-- Le directory senza lingua (/<slug>/support/ e /<slug>/privacy/) reindirizzano
+  /<slug>/<lang>/, /<slug>/support/<lang>/ e /<slug>/privacy/<lang>/
+- Le directory senza lingua (/<slug>/, /<slug>/support/ e /<slug>/privacy/) reindirizzano
   automaticamente alla lingua di default (es. `en`).
 - La root `/` non espone l'elenco delle app: ogni app è raggiungibile solo tramite link diretto.
 """
@@ -29,6 +31,17 @@ CONTENT_DIR = ROOT / "content"
 LANG_STRINGS: dict[str, dict[str, str]] = {
     "en": {
         "name": "English",
+        "hub_badge": "Support & Privacy",
+        "hub_title": "{app} – Support & Privacy",
+        "hub_title_support_only": "{app} – Support",
+        "hub_meta": "Official support and privacy policy pages for {app}.",
+        "hub_meta_support_only": "Official support page for {app}.",
+        "hub_lead": "Choose a section to get assistance or read the privacy policy.",
+        "hub_lead_support_only": "Access official support resources for {app}.",
+        "hub_support_desc": "Need help, have a question, or want to report an issue? Get in touch with us.",
+        "hub_privacy_desc": "Learn how {app} handles your information and protects your privacy.",
+        "hub_support_cta": "Open Support",
+        "hub_privacy_cta": "Read Privacy Policy",
         "support_badge": "Support",
         "support_title": "Support – {app}",
         "support_heading": "{app} Support",
@@ -47,6 +60,17 @@ LANG_STRINGS: dict[str, dict[str, str]] = {
     },
     "it": {
         "name": "Italiano",
+        "hub_badge": "Supporto e Privacy",
+        "hub_title": "{app} – Supporto e Privacy",
+        "hub_title_support_only": "{app} – Supporto",
+        "hub_meta": "Pagine ufficiali di supporto e informativa sulla privacy di {app}.",
+        "hub_meta_support_only": "Pagina di supporto ufficiale di {app}.",
+        "hub_lead": "Scegli una sezione per ricevere assistenza o consultare l’informativa sulla privacy.",
+        "hub_lead_support_only": "Accedi al supporto ufficiale per {app}.",
+        "hub_support_desc": "Hai bisogno di aiuto, hai una domanda o vuoi segnalare un problema? Contattaci.",
+        "hub_privacy_desc": "Scopri come {app} gestisce le informazioni e tutela la tua privacy.",
+        "hub_support_cta": "Vai al Supporto",
+        "hub_privacy_cta": "Leggi la Privacy Policy",
         "support_badge": "Supporto",
         "support_title": "Supporto – {app}",
         "support_heading": "Supporto {app}",
@@ -65,6 +89,17 @@ LANG_STRINGS: dict[str, dict[str, str]] = {
     },
     "es": {
         "name": "Español",
+        "hub_badge": "Soporte y Privacidad",
+        "hub_title": "{app} – Soporte y Privacidad",
+        "hub_title_support_only": "{app} – Soporte",
+        "hub_meta": "Páginas oficiales de soporte y política de privacidad de {app}.",
+        "hub_meta_support_only": "Página oficial de soporte de {app}.",
+        "hub_lead": "Elige una sección para recibir ayuda o consultar la política de privacidad.",
+        "hub_lead_support_only": "Accede al soporte oficial de {app}.",
+        "hub_support_desc": "¿Necesitas ayuda, tienes una pregunta o quieres reportar un problema? Contáctanos.",
+        "hub_privacy_desc": "Descubre cómo {app} trata la información y protege tu privacidad.",
+        "hub_support_cta": "Ir al Soporte",
+        "hub_privacy_cta": "Leer la Privacidad",
         "support_badge": "Soporte",
         "support_title": "Soporte – {app}",
         "support_heading": "Soporte de {app}",
@@ -83,6 +118,17 @@ LANG_STRINGS: dict[str, dict[str, str]] = {
     },
     "fr": {
         "name": "Français",
+        "hub_badge": "Assistance et Confidentialité",
+        "hub_title": "{app} – Assistance et Confidentialité",
+        "hub_title_support_only": "{app} – Assistance",
+        "hub_meta": "Pages officielles d’assistance et de politique de confidentialité pour {app}.",
+        "hub_meta_support_only": "Page d’assistance officielle pour {app}.",
+        "hub_lead": "Choisissez une section pour obtenir de l’aide ou consulter la politique de confidentialité.",
+        "hub_lead_support_only": "Accédez à l’assistance officielle de {app}.",
+        "hub_support_desc": "Besoin d’aide, une question ou un problème à signaler ? Contactez-nous.",
+        "hub_privacy_desc": "Découvrez comment {app} traite les informations et protège votre vie privée.",
+        "hub_support_cta": "Ouvrir l’assistance",
+        "hub_privacy_cta": "Lire la confidentialité",
         "support_badge": "Assistance",
         "support_title": "Assistance – {app}",
         "support_heading": "Assistance {app}",
@@ -101,6 +147,17 @@ LANG_STRINGS: dict[str, dict[str, str]] = {
     },
     "de": {
         "name": "Deutsch",
+        "hub_badge": "Support & Datenschutz",
+        "hub_title": "{app} – Support & Datenschutz",
+        "hub_title_support_only": "{app} – Support",
+        "hub_meta": "Offizielle Support- und Datenschutzseiten für {app}.",
+        "hub_meta_support_only": "Offizielle Support-Seite für {app}.",
+        "hub_lead": "Wählen Sie einen Bereich für Hilfe oder die Datenschutzerklärung.",
+        "hub_lead_support_only": "Offizieller Support für {app}.",
+        "hub_support_desc": "Brauchen Sie Hilfe oder möchten Sie ein Problem melden? Kontaktieren Sie uns.",
+        "hub_privacy_desc": "Erfahren Sie, wie {app} Ihre Daten behandelt und Ihre Privatsphäre schützt.",
+        "hub_support_cta": "Support öffnen",
+        "hub_privacy_cta": "Datenschutz lesen",
         "support_badge": "Support",
         "support_title": "Support – {app}",
         "support_heading": "{app} Support",
@@ -146,6 +203,11 @@ def rel_file_url(from_dir: str, to_file: str) -> str:
     """Restituisce l'URL relativo verso un file statico (es. assets/style.css)."""
     src = from_dir or "."
     return os.path.relpath(to_file, src).replace(os.sep, "/")
+
+
+def app_hub_dir(slug: str, lang: str) -> str:
+    """Restituisce il percorso della pagina hub della singola app con lingua esplicita."""
+    return f"{slug}/{lang}"
 
 
 def section_dir(slug: str, section: str, lang: str) -> str:
@@ -408,8 +470,20 @@ def build() -> None:
         app_year = app.get("copyright_year", year)
         has_privacy: bool = app.get("has_privacy", True)
 
+        hub_dirs = {l: app_hub_dir(slug, l) for l in app_langs}
         support_dirs = {l: section_dir(slug, "support", l) for l in app_langs}
         privacy_dirs = {l: section_dir(slug, "privacy", l) for l in app_langs} if has_privacy else {}
+
+        # Redirect /<slug>/ -> /<slug>/<default_lang>/
+        hub_title_key = "hub_title" if has_privacy else "hub_title_support_only"
+        app_redirect = render_redirect_page(
+            lang=app_def,
+            title=t(app_def, hub_title_key, app=app_name),
+            target_href=f"{app_def}/",
+            css_href=rel_file_url(slug, "assets/style.css"),
+        )
+        out = write_html(slug, app_redirect)
+        generated.append(str(out.relative_to(ROOT)))
 
         # Redirect /<slug>/support/ -> /<slug>/support/<default_lang>/
         sup_base_dir = f"{slug}/support"
@@ -435,6 +509,69 @@ def build() -> None:
             generated.append(str(out.relative_to(ROOT)))
 
         for lang in app_langs:
+            # --- App hub page (/<slug>/<lang>/) ---
+            cur_hub_dir = hub_dirs[lang]
+            hub_css_href = rel_file_url(cur_hub_dir, "assets/style.css")
+            hub_hreflangs = render_hreflangs(cur_hub_dir, hub_dirs, app_def)
+            hub_lang_nav = render_lang_nav(lang, cur_hub_dir, hub_dirs)
+            hub_sup_href = rel_dir_url(cur_hub_dir, support_dirs[lang])
+
+            hub_boxes = [
+                f"""      <article class="app-item">
+        <div>
+          <h2>{html.escape(t(lang, 'support_badge'))}</h2>
+          <p>{html.escape(t(lang, 'hub_support_desc', app=app_name))}</p>
+        </div>
+        <div class="app-actions">
+          <a class="btn btn-primary" href="{hub_sup_href}">{html.escape(t(lang, 'hub_support_cta'))}</a>
+        </div>
+      </article>"""
+            ]
+
+            if has_privacy:
+                hub_priv_href = rel_dir_url(cur_hub_dir, privacy_dirs[lang])
+                hub_boxes.append(
+                    f"""      <article class="app-item">
+        <div>
+          <h2>{html.escape(t(lang, 'privacy_badge'))}</h2>
+          <p>{html.escape(t(lang, 'hub_privacy_desc', app=app_name))}</p>
+        </div>
+        <div class="app-actions">
+          <a class="btn btn-secondary" href="{hub_priv_href}">{html.escape(t(lang, 'hub_privacy_cta'))}</a>
+        </div>
+      </article>"""
+                )
+
+            hub_badge_key = "hub_badge" if has_privacy else "support_badge"
+            hub_meta_key = "hub_meta" if has_privacy else "hub_meta_support_only"
+            hub_lead_key = "hub_lead" if has_privacy else "hub_lead_support_only"
+
+            hub_body = f"""    <div class="topbar">
+      <span class="eyebrow">{html.escape(t(lang, hub_badge_key))}</span>
+      {hub_lang_nav}
+    </div>
+    <h1>{html.escape(app_name)}</h1>
+    <p class="lead">{html.escape(t(lang, hub_lead_key, app=app_name))}</p>
+    <section class="app-list">
+{chr(10).join(hub_boxes)}
+    </section>
+    <footer>
+      <span>© {app_year} {html.escape(app_name)} – {html.escape(t(lang, 'rights'))}</span>
+    </footer>"""
+
+            hub_html = render_page(
+                lang=lang,
+                title=t(lang, hub_title_key, app=app_name),
+                description=t(lang, hub_meta_key, app=app_name),
+                css_href=hub_css_href,
+                hreflangs_html=hub_hreflangs,
+                body_class="",
+                card_class="card card-wide",
+                body_html=hub_body,
+            )
+            out = write_html(cur_hub_dir, hub_html)
+            generated.append(str(out.relative_to(ROOT)))
+
             # --- Support page ---
             cur_dir = support_dirs[lang]
             css_href = rel_file_url(cur_dir, "assets/style.css")
@@ -535,7 +672,9 @@ def build() -> None:
             has_privacy = app.get("has_privacy", True)
             print(f"\n  {app['name']} (default: {app.get('default_language', site_default_lang)}):")
             for lang in app["languages"]:
+                hub = app_hub_dir(slug, lang)
                 sup = section_dir(slug, "support", lang)
+                print(f"    [{lang}] Home    : {base_url}/{hub}/")
                 print(f"    [{lang}] Support : {base_url}/{sup}/")
                 if has_privacy:
                     priv = section_dir(slug, "privacy", lang)
